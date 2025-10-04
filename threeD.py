@@ -15,12 +15,19 @@ class Line:
         self.info = [vertex_a, vertex_b]
 
 class Face:
-    def __init__(self, *vertexs) -> None:
+    def __init__(self, *vertexs: Vertex) -> None:
         self.info = vertexs
+
+class Camera:
+    def __init__(self, pos: tuple[float, float, float], rotation: tuple[float, float, float], fov: int) -> None:
+        self.pos = self.x, self.y, self.z = pos
+        self.rotation = self.rotation_x, self.rotation_y, self.rotation_z = rotation
+        self.fov = fov
 
 a_vertex = Vertex(1, 1, 1)
 b_vertex = Vertex(-1, 1, 1)
 a_face = Face(a_vertex, b_vertex)
+a_camera = Camera((1, 1, 1), (0, 0, 0), 60)
 print(a_face.info)
 
 # TODO: add renderer
