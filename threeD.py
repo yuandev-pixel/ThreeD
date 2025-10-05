@@ -1,5 +1,7 @@
+from numpy.typing import ArrayLike
 import pygame
 import sys
+import numpy as np
 
 pygame.init()
 
@@ -18,19 +20,55 @@ class Face:
     def __init__(self, *vertexs: Vertex) -> None:
         self.info = vertexs
 
+class Object:
+    def __init__(self, *faces: Face) -> None:
+        self.info = faces
+
 class Camera:
     def __init__(self, pos: tuple[float, float, float], rotation: tuple[float, float, float], fov: int) -> None:
         self.pos = self.x, self.y, self.z = pos
         self.rotation = self.rotation_x, self.rotation_y, self.rotation_z = rotation
         self.fov = fov
 
-a_vertex = Vertex(1, 1, 1)
-b_vertex = Vertex(-1, 1, 1)
-a_face = Face(a_vertex, b_vertex)
-a_camera = Camera((1, 1, 1), (0, 0, 0), 60)
-print(a_face.info)
+class Scene:
+    def __init__(self, camera: Camera, *objects: Object) -> None:
+        self.info = {"objects": objects, "camera": camera}
 
 # TODO: add renderer
+
+# why do you need two renderers
+class Renderer:
+    def __init__(self, scene: Scene) -> None:
+        self.scene = scene
+        self.buffer = {}
+
+    def rotation_matrix_x(self, theta: float) -> ArrayLike:
+        return np.array([
+            [1, 0, 0],
+            [0, np.cos(theta), -np.sin(theta)],
+            [0, np.sin(theta), np.cos(theta)]
+        ])
+
+    def rotate_x(self, vecter: ArrayLike, theta: float) -> ArrayLike:
+        print(self.rotation_matrix_x(theta))
+        return np.dot(self.rotation_matrix_x(theta), vecter)
+    
+    def render(self) -> None:
+        scene_obj = self.scene.info["objects"]
+        scene_cam = self.scene.info["camera"]
+
+    def push(self) -> None:
+        pass
+
+a_vertex = Vertex(0, 0, 0)
+b_vertex = Vertex(1, 0, 0)
+c_vertex = Vertex(0, 1, 0)
+a_face = Face(a_vertex, b_vertex, c_vertex)
+a_object = Object(a_face)
+a_camera = Camera((0, 0, 0), (0, 0, 0), 60)
+a_scene = Scene(a_camera, a_object)
+render = Renderer(a_scene)
+print(render.rotate_x(np.array([0, 1, 0]), np.pi/4))
 
 while True:
     for event in pygame.event.get():
