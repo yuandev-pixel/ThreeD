@@ -49,9 +49,28 @@ class Renderer:
             [0, np.sin(theta), np.cos(theta)]
         ])
 
+    def rotation_matrix_y(self, theta: float) -> ArrayLike:
+        return np.array([
+            [np.cos(theta), 0, np.sin(theta)],
+            [0, 1, 0],
+            [-np.sin(theta), 0, np.cos(theta)]
+        ])
+
+    def rotation_matrix_z(self, theta: float) -> ArrayLike:
+        return np.array([
+            [np.cos(theta), -np.sin(theta), 0],
+            [np.sin(theta), np.cos(theta), 0],
+            [0, 0, 1]
+        ])
+
     def rotate_x(self, vecter: ArrayLike, theta: float) -> ArrayLike:
-        print(self.rotation_matrix_x(theta))
         return np.dot(self.rotation_matrix_x(theta), vecter)
+
+    def rotate_y(self, vecter: ArrayLike, theta: float) -> ArrayLike:
+        return np.dot(self.rotation_matrix_y(theta), vecter)
+
+    def rotate_z(self, vecter: ArrayLike, theta: float) -> ArrayLike:
+        return np.dot(self.rotation_matrix_z(theta), vecter)
     
     def render(self) -> None:
         scene_obj = self.scene.info["objects"]
@@ -68,7 +87,7 @@ a_object = Object(a_face)
 a_camera = Camera((0, 0, 0), (0, 0, 0), 60)
 a_scene = Scene(a_camera, a_object)
 render = Renderer(a_scene)
-print(render.rotate_x(np.array([0, 1, 0]), np.pi/4))
+print(render.rotate_z(np.array([1, 1, 0]), np.pi/4))
 
 while True:
     for event in pygame.event.get():
